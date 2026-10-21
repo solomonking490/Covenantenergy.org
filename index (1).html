@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TransGuard Nigeria | Proof of concept</title>
+<meta name="description" content="TransGuard Nigeria: remote monitoring and management for local distribution transformers. Simulated proof of concept for the Global Energy Hackathon.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3 34 9v10c0 9-6 15-14 18C12 34 6 28 6 19V9z' fill='%23147A42'/%3E%3Cpath d='M22 10 14 22h6l-2 8 9-13h-6z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+:root{--g:#147A42;--dg:#0F5132;--bg:#E6F2EA;--line:#D2E4D8;--tile:#EEF6F1;--ink:#12281D;--mut:#4F6A5B;--wt:#8A4B00;--wb:#FFF3DC;--ct:#B42318;--cb:#FDECEA;color-scheme:light}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--dg)}img{max-width:100%}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;border-bottom:4px double var(--g);flex-wrap:wrap}
+.top .b{display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:700;color:var(--dg);text-decoration:none;gap:2px}
+.top nav{display:flex;gap:6px;flex-wrap:wrap}.top nav a{padding:10px 12px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px}.top nav a:hover{background:var(--tile)}
+.w{max-width:1280px;margin:0 auto;padding:0 20px}
+.hero{background:linear-gradient(180deg,var(--bg),#fff);padding:44px 0 28px}
+h1{font-size:clamp(30px,5vw,46px);line-height:1.1;margin:0 0 10px;color:var(--dg)}h2{font-size:24px;color:var(--dg);margin:0 0 12px}h3{margin:0 0 10px;font-size:15px;color:var(--dg)}
+.lead{font-size:19px;max-width:760px;margin:0 0 16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.chip{background:var(--wb);color:var(--wt);border-radius:999px;padding:5px 14px;font-weight:700;font-size:13px}.chip.g{background:var(--g);color:#fff}
+.btn{display:inline-block;min-height:44px;padding:11px 20px;border-radius:10px;border:1px solid var(--g);background:#fff;color:var(--dg);font:700 15px system-ui,sans-serif;text-decoration:none;cursor:pointer}.btn.p{background:var(--g);color:#fff}
+section{padding:30px 0}
+.cons{background:var(--bg);border-radius:14px;padding:14px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:12px}
+.bar button,.bar select{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #BFD8C8;background:#fff;color:var(--dg);font:700 14px system-ui,sans-serif;cursor:pointer}
+.bar button.on,.bar button.p{background:var(--g);color:#fff;border-color:var(--g)}
+.app{display:grid;grid-template-columns:220px 1fr 300px;gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+.mut{color:var(--mut)}.tree{list-style:none;margin:0;padding:0}.tree li{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;font-weight:600;font-size:14px}.tree li.sel{background:#DCEEE3;color:var(--dg)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--g);flex:none}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.t{background:var(--tile);border-radius:8px;padding:8px 4px;text-align:center}.t span{display:block;font-size:12px;color:var(--mut)}.t b{font-size:17px}
+.t.w{background:var(--wb)}.t.w b{color:var(--wt)}.t.c{background:var(--cb)}.t.c b{color:var(--ct)}
+.row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid #E3EEE7;font-size:14px}.row:last-child{border:0}
+.chain{display:flex;gap:5px;flex-wrap:wrap}.s{padding:5px 9px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--mut)}.s.d{background:var(--g);border-color:var(--g);color:#fff;font-weight:700}
+.al{border:1px solid var(--line);border-left:5px solid var(--g);border-radius:8px;padding:8px;margin-bottom:8px;font-size:14px}.al.warn{border-left-color:#D97706}.al.crit{border-left-color:#C0362C}
+.log{max-height:170px;overflow:auto;font-size:12.5px;margin:0;padding:0;list-style:none}.log li{padding:4px 0;border-bottom:1px solid #E3EEE7}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%}td,th{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}th{background:var(--tile);color:var(--dg)}
+footer{background:var(--dg);color:#fff;padding:24px 0;font-size:14px}footer a{color:#fff}
+@media(max-width:1100px){.app{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
+@media(max-width:640px){.cards{grid-template-columns:1fr}}
+</style></head><body>
+<header class="top">
+<a class="b" href="#"><img src="assets/geh_logo.png" alt="Global Energy Hackathon logo" width="44" height="44">Global Energy Hackathon</a>
+<nav aria-label="Sections"><a href="#console">Live console</a><a href="#proof">What it proves</a><a href="#case">Idera Oduguyan case</a></nav>
+<img src="assets/covenant_logo.png" alt="Covenant Energy Technology logo" height="52" style="height:52px;width:auto">
+</header>
+<main>
+<div class="hero"><div class="w">
+<div class="chips"><span class="chip g">Proof of concept</span><span class="chip">Simulated data</span><span class="chip">No physical unit installed yet</span></div>
+<h1>TransGuard Nigeria</h1>
+<p class="lead">Remote monitoring and management for local distribution transformers. A solar-and-battery sensor and alert unit that detects faults and tampering and alerts a named responder, even when the grid is down.</p>
+<a class="btn p" href="#console">Run the simulation</a> <a class="btn" href="#case">See the Idera Oduguyan case</a>
+</div></div>
+<section id="console"><div class="w">
+<h2>Live console</h2>
+<p class="mut" style="margin-top:0">The operator dashboard for site LAG0024, driven by a simulation. Pick a scenario, press Play, and acknowledge the alerts as a responder would.</p>
+<div class="cons">
+<div class="bar" id="sc"></div>
+<div class="bar"><button class="p" id="play">Play</button><button id="reset">Reset</button><label class="mut">Speed <select id="spd"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label><span id="clk" class="mut" style="margin-left:auto"></span></div>
+<p class="mut" id="desc" style="margin:0 4px 12px"></p>
+<div class="app">
+<aside class="card"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 34 9v10c0 9-6 15-14 18C12 34 6 28 6 19V9z" fill="#147A42"/><path d="M22 10 14 22h6l-2 8 9-13h-6z" fill="#fff"/></svg><div><b style="color:var(--dg)">TransGuard Nigeria</b><div class="mut" style="font-size:12px">Transformer monitoring</div></div></div>
+<ul class="tree"><li>TransGuard Nigeria <span class="mut" style="margin-left:auto">20</span></li><li style="padding-left:20px">Lagos State (LAG)</li><li class="sel" style="padding-left:32px"><span class="dot" id="sdot"></span>LAG0024</li><li style="padding-left:32px"><span class="dot"></span>LAG0007</li><li style="padding-left:32px"><span class="dot"></span>LAG0031</li></ul>
+<p class="mut" style="font-size:12px">Sites are named by state code and number. Only LAG0024 is simulated.</p></aside>
+<div>
+<div class="card" style="border-color:var(--g)"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px"><div><b style="font-size:22px;color:var(--dg)">LAG0024</b><div class="mut" style="font-size:13px">Node TG-0024 · 300 kVA distribution transformer · solar and battery backup</div></div><span class="chip">Sample data</span></div>
+<svg viewBox="0 0 760 190" width="100%" role="img" aria-label="Power flow from grid, solar and battery to the TransGuard node" style="margin-top:6px"><g fill="none" stroke="#147A42" stroke-width="2" stroke-dasharray="3 7" stroke-linecap="round"><path d="M80 90V150H640M300 90V150M520 90V150"/></g><g fill="#fff" stroke="#147A42" stroke-width="2"><circle cx="80" cy="56" r="32"/><circle cx="300" cy="56" r="32"/><circle cx="520" cy="56" r="32"/></g><circle cx="680" cy="150" r="36" fill="#147A42"/><path d="M670 162l8-24h-6l8-14-4 12h7z" fill="#fff"/><g stroke="#147A42" stroke-width="2.5" fill="none" stroke-linecap="round"><path d="M72 60h16M80 48v24"/><circle cx="300" cy="56" r="8"/><rect x="506" y="48" width="28" height="16" rx="3"/></g>
+<g font-family="system-ui,sans-serif" font-size="13" text-anchor="middle" fill="#12281D"><text x="80" y="108" font-weight="700">Grid (LV side)</text><text x="80" y="126" id="fg">Online</text><text x="300" y="108" font-weight="700">Solar</text><text x="300" y="126">0.42 kW</text><text x="520" y="108" font-weight="700" id="fb">Battery</text><text x="520" y="126" id="fb2"></text><text x="680" y="204" font-weight="700" transform="translate(0,-14)">Node load 18 W</text></g></svg></div>
+<div class="cards">
+<div class="card"><h3>Transformer</h3><div class="tiles"><div class="t" id="k1"><span>Oil level</span><b></b></div><div class="t" id="k2"><span>Oil temp</span><b></b></div><div class="t" id="k3"><span>Tank</span><b></b></div></div></div>
+<div class="card"><h3>Electrical load</h3><div class="tiles"><div class="t" id="k4"><span>Load</span><b></b></div><div class="t" id="k5"><span>Voltage</span><b></b></div><div class="t" id="k6"><span>Current</span><b></b></div></div></div>
+<div class="card"><h3>Security and fire</h3><div class="tiles"><div class="t" id="k7"><span>Enclosure</span><b></b></div><div class="t" id="k8"><span>Tamper</span><b></b></div><div class="t" id="k9"><span>Fire</span><b>Clear</b></div></div></div>
+<div class="card"><h3>Solar and battery</h3><div class="tiles"><div class="t"><span>Solar</span><b>0.42 kW</b></div><div class="t" id="k10"><span>Battery</span><b></b></div><div class="t"><span>Voltage</span><b>12.9 V</b></div></div></div>
+</div></div>
+<aside style="display:flex;flex-direction:column;gap:12px">
+<div class="card"><svg viewBox="0 0 320 120" width="100%" role="img" aria-label="Site map placeholder"><rect width="320" height="120" rx="8" fill="#CFE6D6"/><g stroke="#fff" stroke-width="6" fill="none"><path d="M0 80C80 62 160 96 320 50M110 0 140 120M230 0V120"/></g><path d="M170 20a13 13 0 0 1 13 13c0 10-13 26-13 26s-13-16-13-26a13 13 0 0 1 13-13z" fill="#147A42"/><circle cx="170" cy="33" r="4" fill="#fff"/></svg><div class="mut" style="font-size:12px">[Site address], Lagos, Nigeria</div></div>
+<div class="card"><h3>Connectivity</h3><div class="row"><span class="mut">Last report</span><b id="lr"></b></div><div class="row"><span class="mut">Network</span><b id="nw"></b></div><div class="row"><span class="mut">Buffered events</span><b id="bf"></b></div></div>
+<div class="card"><h3>Open alerts</h3><div id="al" aria-live="polite"></div><h3 style="margin-top:10px">Response chain</h3><div class="chain" id="chain"></div></div>
+<div class="card"><h3>Event log</h3><ul class="log" id="log"></ul></div>
+</aside></div></div></div></section>
+<section id="proof" style="background:var(--tile)"><div class="w"><h2>What this proof of concept shows</h2><div class="two">
+<div class="card"><h3>It shows</h3><p>The alert logic, escalation rules, dashboard view and six-step response chain (Detect, Verify, Alert, Acknowledge, Respond, Record) work end to end, and what a difference acknowledgement makes when a transformer overheats.</p></div>
+<div class="card"><h3>It does not show</h3><p>Sensor accuracy on a real transformer, the false-alarm rate, responder behavior in the field, or cost per site. The planned 20-site, six-month pilot with a licensed operator tests those.</p></div></div></div></section>
+<section id="case"><div class="w"><h2>Mini case study: Idera Oduguyan, Ikorodu, Lagos State</h2>
+<p>Between February and August 2026, the community’s local distribution transformer was vandalized twice for the resale value of its copper. In the same period, an undetected fault left it overheating, and it had to be replaced completely. The community levied itself to pay for it all, making electricity less affordable, less available and harder to access. Much of this loss was avoidable with timely information.</p>
+<div class="tw"><table><tr><th>What happened (community account)</th><th>What TransGuard would show</th></tr>
+<tr><td>Transformer vandalized twice for copper</td><td>An enclosure-open and tamper alert to a named responder at the first intrusion. Try “Forced entry”.</td></tr>
+<tr><td>Undetected fault, transformer overheats</td><td>An oil-temperature warning before failure, with time to inspect. Try “Overheating fault”, then do not acknowledge.</td></tr>
+<tr><td>Transformer replaced, community levies itself</td><td>Earlier action that can limit loss. The size of that effect is what the pilot measures. It is not assumed here.</td></tr></table></div></div></section>
+</main>
+<footer><div class="w"><b>TransGuard Nigeria</b> is a project of Covenant Energy Technology, submitted to the Global Energy Hackathon (October 30 to November 1, 2026).<br>Amadasu Osarumwense Solomon, Founder · +234 706 571 9732 · <a href="mailto:solomon.amadasu@gmail.com">solomon.amadasu@gmail.com</a><br><span style="opacity:.85">All readings on this page are simulated to demonstrate the alert logic. They are not field data.</span></div></footer>
+<script>
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,"0");
+const SC={
+A:{n:"Forced entry",dur:30,d:"An intruder opens the enclosure, then the supply is cut.",ev:[[5,"crit","Enclosure opened","Forced access detected at LAG0024."],[9,"crit","Supply lost","Load fell from 62% to 0%. Cable cut suspected."]],st:m=>({encl:m>=5,tamper:m>=5,load:m>=9?0:62,sup:m<9})},
+B:{n:"Overheating fault",dur:120,d:"Oil temperature climbs and oil level drops. Acknowledge the alert to see the effect of early action, or ignore it to see the outcome.",ev:[[39,"warn","Oil temperature high","Oil temperature above 70 °C and rising."],[65,"crit","Oil temperature critical","Above 82 °C. Inspect now to avoid failure."]],
+ st:(m,r)=>{const f=x=>x<20?58+.2*x:62+.45*(x-20);let o=Math.min(105,f(m));if(r.crew!=null&&m>=r.crew)o=Math.max(64,Math.min(105,f(r.crew))-1.5*(m-r.crew));return{oil:o,lvl:82-.15*Math.max(0,m-50),load:78,failed:r.crew==null&&m>=110}}},
+C:{n:"Grid outage",dur:60,d:"The grid fails. The node keeps reporting on battery, then loses its cellular link and buffers events offline.",ev:[[10,"warn","Grid supply lost","Node is running on battery backup."],[25,"info","Cellular link lost","Events are being buffered on the node."],[45,"info","Link restored","Buffered events synced to the dashboard."],[58,"info","Grid restored","Supply back to normal."]],
+ st:m=>({sup:!(m>=10&&m<58),load:m>=10&&m<58?0:62,batt:94-.104*Math.max(0,Math.min(m,58)-10),link:!(m>=25&&m<45),buf:m>=25&&m<45?Math.floor((m-25)/2):0})}};
+const BASE={oil:58,lvl:82,load:62,encl:false,tamper:false,sup:true,batt:94,link:true,buf:0,failed:false};
+let key="A",m=0,run=false,spd=1,al=[],lg=[],fired={},r={crew:null,rec:null},last=0;
+const clk=x=>{const t=90+Math.floor(x);return pad(Math.floor(t/60)%24)+":"+pad(t%60)};
+const log=t=>lg.unshift(clk(m)+"  "+t);
+function reset(){m=0;run=false;al=[];lg=[];fired={};r={crew:null,rec:null};ui()}
+const once=(id,f)=>{if(!fired[id]){fired[id]=1;f()}};
+function step(){const s=SC[key];
+ s.ev.forEach((e,i)=>{if(m>=e[0])once("e"+i,()=>{const a={id:al.length,m:e[0],l:e[1],t:e[2],x:e[3],ack:e[1]=="info"?-1:null,esc:false};al.push(a);log((a.l=="info"?"Info: ":"Alert: ")+a.t)})});
+ al.forEach(a=>{if(a.ack==null&&!a.esc&&m>=a.m+5){a.esc=true;log("No acknowledgement: escalated to security focal person for “"+a.t+"”")}});
+ if(r.crew!=null&&m>=r.crew)once("crew",()=>log("Crew dispatched to LAG0024"));
+ if(r.rec!=null&&m>=r.rec)once("rec",()=>log("Incident record created: events, times and work order linked"));
+ if(key=="B"&&m>=110&&r.crew==null)once("fail",()=>log("Transformer failed. Without a response, an overheating transformer can be lost completely."))}
+function ack(i){const a=al[i];if(!a||a.ack!=null)return;a.ack=m;log("Acknowledged by responder: “"+a.t+"”");if(r.crew==null){r.crew=m+3;r.rec=m+8}ui()}
+function T(id,v,c){const e=$("#"+id);e.querySelector("b").textContent=v;e.className="t "+(c||"")}
+function ui(){const s=SC[key],v=Object.assign({},BASE,s.st(m,r)),shown=al.filter(a=>a.ack!=-1);
+ $("#sc").innerHTML=Object.keys(SC).map(k=>`<button data-k="${k}" class="${k==key?"on":""}">${SC[k].n}</button>`).join("");
+ $("#desc").textContent=s.d;$("#clk").textContent="Simulated clock "+clk(m)+" · minute "+Math.floor(m)+" of "+s.dur;
+ $("#play").textContent=run?"Pause":(m>=s.dur?"Finished":"Play");
+ const oc=v.oil>=82?"c":v.oil>=70?"w":"",ps=!v.sup;
+ T("k1",v.lvl.toFixed(0)+" %",v.lvl<75?"w":"");T("k2",v.failed?"FAILED":v.oil.toFixed(0)+" °C",v.failed?"c":oc);T("k3",v.failed?"Fault":v.oil>=82?"Critical":v.oil>=70?"Warning":"Normal",v.failed?"c":oc);
+ const kva=v.load*3;T("k4",kva.toFixed(0)+" kVA");T("k5",ps?"0 V":"415 V",ps?"c":"");T("k6",ps?"0 A":Math.round(kva*1000/(1.732*415))+" A");
+ T("k7",v.encl?"OPEN":"Closed",v.encl?"c":"");T("k8",v.tamper?"DETECTED":"None",v.tamper?"c":"");T("k10",v.batt.toFixed(0)+" %");
+ $("#fg").textContent=ps?"Lost":"Online";$("#fb").textContent="Battery "+v.batt.toFixed(0)+"%";$("#fb2").textContent="Backup "+(v.batt/94*15).toFixed(0)+" h";
+ $("#lr").textContent=v.link?clk(m):"Buffering";$("#nw").textContent=v.link?"4G":"Offline";$("#bf").textContent=v.buf;
+ const pend=shown.some(a=>a.ack==null&&a.l=="crit"),warn=shown.some(a=>a.ack==null)||ps;$("#sdot").style.background=pend||v.failed?"#C0362C":warn?"#D97706":"#147A42";
+ const cur=[...shown].pop(),N=["Detect","Verify","Alert","Acknowledge","Respond","Record"],dn=cur?[1,1,1,cur.ack!=null,r.crew!=null&&m>=r.crew,r.rec!=null&&m>=r.rec]:[];
+ $("#chain").innerHTML=N.map((n,i)=>`<span class="s ${dn[i]?"d":""}">${i+1} ${n}</span>`).join("");
+ $("#al").innerHTML=shown.length?shown.map(a=>`<div class="al ${a.l}"><b>${a.t}</b> <span class="mut">${clk(a.m)}</span><div>${a.x}</div><div style="margin-top:6px"><span class="mut">${a.ack!=null?"Acknowledged":a.esc?"Escalated, awaiting acknowledgement":"Pending acknowledgement"}</span> ${a.ack==null?`<button class="btn p" style="min-height:44px;padding:8px 14px" data-a="${a.id}">Acknowledge</button>`:""}</div></div>`).join(""):`<span class="mut">No alerts yet. Press Play.</span>`;
+ $("#log").innerHTML=lg.map(x=>`<li>${x}</li>`).join("")}
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+ if(b.dataset.k){key=b.dataset.k;reset()}else if(b.dataset.a)ack(+b.dataset.a);else if(b.id=="reset")reset();
+ else if(b.id=="play"){if(m>=SC[key].dur)return;run=!run;last=performance.now();ui()}});
+$("#spd").onchange=e=>spd=+e.target.value;
+function loop(t){const dt=t-last;last=t;if(run){m=Math.min(SC[key].dur,m+dt/500*spd);step();if(m>=SC[key].dur){run=false;log("Scenario complete")}ui()}requestAnimationFrame(loop)}
+ui();requestAnimationFrame(loop);
+</script></body></html>
